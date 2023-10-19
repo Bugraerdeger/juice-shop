@@ -15,7 +15,9 @@ module.exports = function productReviews () {
   return (req: Request, res: Response, next: NextFunction) => {
     const id = req.body.id
     const user = security.authenticatedUsers.from(req)
-    db.reviews.findOne({ _id: id }).then((review: Review) => {
+  
+    // Kullanıcının yalnızca kendi yorumlarına erişmesine izin verin
+    db.reviews.findOne({ _id: id, userId: user._id }).then((review: Review) => {
       if (!review) {
         res.status(404).json({ error: 'Not found' })
       } else {
