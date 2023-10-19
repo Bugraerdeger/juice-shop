@@ -26,12 +26,21 @@ module.exports = function productReviews () {
             { $inc: { likesCount: 1 } }
           ).then(
             () => {
-              // Artificial wait for timing attack challenge
-              setTimeout(function () {
-                db.reviews.findOne({ _id: id }).then((review: Review) => {
-                  const likedBy = review.likedBy
-                  likedBy.push(user.data.email)
-                  let count = 0
+              db.reviews.findOne({ _id: id }).then((review) => {
+              if (review) {
+              const likedBy = review.likedBy || [];
+              likedBy.push(user.data.email);
+              db.reviews.updateOne({ _id: id }, { $set: { likedBy: likedBy } }).then((result) => {
+              if (result) {
+              } else {
+              }
+              }).catch((err) => {
+              });
+              } else {
+              }
+              }).catch((err) => {
+              });
+              }
                   for (let i = 0; i < likedBy.length; i++) {
                     if (likedBy[i] === user.data.email) {
                       count++
