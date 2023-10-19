@@ -35,13 +35,13 @@ module.exports = function productReviews () {
                   for (let i = 0; i < likedBy.length; i++) {
                     if (likedBy[i] === user.data.email) {
                       count++
-                    }
-                  }
-                  challengeUtils.solveIf(challenges.timingAttackChallenge, () => { return count > 2 })
-                  db.reviews.update(
-                    { _id: id },
-                    { $set: { likedBy } }
-                  ).then(
+                      challengeUtils.solveIf(challenges.timingAttackChallenge, () => {
+                        // Rastgele bir gecikme oluştu
+                        const delay = Math.floor(Math.random() * 1000);
+                        setTimeout(() => {
+                          return count > 2;
+                        }, delay);
+                      });
                     (result: any) => {
                       res.json(result)
                     }, (err: unknown) => {
