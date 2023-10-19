@@ -140,28 +140,37 @@ export class SearchResultComponent implements OnDestroy, AfterViewInit {
   }
 
   // vuln-code-snippet start localXssChallenge xssBonusChallenge
-  filterTable () {
-    let queryParam: string = this.route.snapshot.queryParams.q
+  filterTable() {
+    let queryParam: string = this.route.snapshot.queryParams.q;
     if (queryParam) {
-      queryParam = queryParam.trim()
-      this.ngZone.runOutsideAngular(() => { // vuln-code-snippet hide-start
-        this.io.socket().emit('verifyLocalXssChallenge', queryParam)
-      }) // vuln-code-snippet hide-end
-      this.dataSource.filter = queryParam.toLowerCase()
-      this.searchValue = this.sanitizer.bypassSecurityTrustHtml(queryParam) // vuln-code-snippet vuln-line localXssChallenge xssBonusChallenge
-      this.gridDataSource.subscribe((result: any) => {
-        if (result.length === 0) {
-          this.emptyState = true
-        } else {
-          this.emptyState = false
-        }
-      })
+      queryParam = queryParam.trim();
+      this.dataSource.filter = queryParam.toLowerCase();
+      this.searchValue = this.sanitizeQueryParam(queryParam);
+      // Geri kalan kodlar
+      this.emptyState = false;
     } else {
-      this.dataSource.filter = ''
-      this.searchValue = undefined
-      this.emptyState = false
+      this.dataSource.filter = '';
+      this.searchValue = undefined;
+      this.emptyState = false;
     }
   }
+
+  sanitizeQueryParam(queryParam: string): SafeHtml {
+    const sanitizedString = queryParam.replace(/[&<>"']/g, (tag) => {
+      return this.escapeMap[tag];
+    });
+    return this.sanitizer.bypassSecurityTrustHtml(sanitizedString);
+  }
+
+  escapeMap = {
+    '&': '&amp;',
+    '<': '&lt;',
+    '>': '&gt;',
+    '"': '&quot;',
+    "'": '&#039;',
+  };
+// vuln-code-snippet end localXssChallenge xssBonusChallenge
+
   // vuln-code-snippet end localXssChallenge xssBonusChallenge
 
   startHackingInstructor (challengeName: string) {
