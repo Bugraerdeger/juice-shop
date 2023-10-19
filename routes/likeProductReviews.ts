@@ -15,7 +15,7 @@ module.exports = function productReviews () {
   return (req: Request, res: Response, next: NextFunction) => {
     const id = req.body.id
     const user = security.authenticatedUsers.from(req)
-  
+
     // Kullanıcının yalnızca kendi yorumlarına erişmesine izin verin
     db.reviews.findOne({ _id: id, userId: user._id }).then((review: Review) => {
       if (!review) {
