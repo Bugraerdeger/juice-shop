@@ -140,26 +140,26 @@ export class SearchResultComponent implements OnDestroy, AfterViewInit {
   }
 
   // vuln-code-snippet start localXssChallenge xssBonusChallenge
-  filterTable() {
-    let queryParam: string = this.route.snapshot.queryParams.q;
+  filterTable () {
+    let queryParam: string = this.route.snapshot.queryParams.q
     if (queryParam) {
-      queryParam = queryParam.trim();
-      this.dataSource.filter = queryParam.toLowerCase();
-      this.searchValue = this.sanitizeQueryParam(queryParam);
+      queryParam = queryParam.trim()
+      this.dataSource.filter = queryParam.toLowerCase()
+      this.searchValue = this.sanitizeQueryParam(queryParam)
       // Geri kalan kodlar
-      this.emptyState = false;
+      this.emptyState = false
     } else {
-      this.dataSource.filter = '';
-      this.searchValue = undefined;
-      this.emptyState = false;
+      this.dataSource.filter = ''
+      this.searchValue = undefined
+      this.emptyState = false
     }
   }
 
-  sanitizeQueryParam(queryParam: string): SafeHtml {
+  sanitizeQueryParam (queryParam: string): SafeHtml {
     const sanitizedString = queryParam.replace(/[&<>"']/g, (tag) => {
-      return this.escapeMap[tag];
-    });
-    return this.sanitizer.bypassSecurityTrustHtml(sanitizedString);
+      return this.escapeMap[tag]
+    })
+    return this.sanitizer.bypassSecurityTrustHtml(sanitizedString)
   }
 
   escapeMap = {
@@ -167,9 +167,9 @@ export class SearchResultComponent implements OnDestroy, AfterViewInit {
     '<': '&lt;',
     '>': '&gt;',
     '"': '&quot;',
-    "'": '&#039;',
-  };
-// vuln-code-snippet end localXssChallenge xssBonusChallenge
+    "'": '&#039;'
+  }
+  // vuln-code-snippet end localXssChallenge xssBonusChallenge
 
   // vuln-code-snippet end localXssChallenge xssBonusChallenge
 
